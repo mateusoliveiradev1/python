@@ -183,8 +183,21 @@
     .playground-actions { display: flex; gap: 9px; flex-wrap: wrap; padding: 14px 0 0; }
     .status { color: var(--muted); font-size: .78rem; margin-left: auto; align-self: center; }
     .resource-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; }
+    .video-shell { display: grid; gap: 12px; }
+    .video-cover { min-height: 330px; display: grid; place-items: center; text-align: center; padding: 28px; overflow: hidden; border-radius: 18px; border: 1px solid var(--line); background: radial-gradient(circle at 50% 20%, rgba(255,88,88,.16), transparent 38%), linear-gradient(145deg,#07120c,#101f16); }
+    .video-cover[hidden], .video-wrap[hidden] { display: none !important; }
+    .video-cover-inner { width: min(600px,100%); }
+    .youtube-mark { width: 78px; height: 54px; margin: 0 auto 18px; display: grid; place-items: center; border-radius: 15px; background: #ff3d3d; box-shadow: 0 14px 42px rgba(255,61,61,.25); }
+    .youtube-mark::after { content: ''; width: 0; height: 0; margin-left: 5px; border-top: 11px solid transparent; border-bottom: 11px solid transparent; border-left: 18px solid #fff; }
+    .video-cover h3 { margin: 0 0 9px; font-size: 1.35rem; }
+    .video-cover p { margin: 0 auto 18px; color: var(--muted); line-height: 1.65; }
+    .video-actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
+    .video-actions a { text-decoration: none; }
     .video-wrap { position: relative; padding-top: 56.25%; overflow: hidden; border-radius: 18px; background: #000; border: 1px solid var(--line); }
     .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .video-help { padding: 13px 14px; border-radius: 13px; border: 1px solid var(--line); background: rgba(255,255,255,.024); color: var(--muted); font-size: .78rem; line-height: 1.55; }
+    .video-help strong { color: var(--text); }
+    .video-help a { color: var(--green); font-weight: 800; }
     .resource-list { display: grid; gap: 10px; }
     .resource-item { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.024); }
     .resource-item strong { display: block; font-size: .88rem; }
@@ -404,8 +417,22 @@ print(f"Daqui a 5 anos você terá {idade + 5} anos.")</textarea>
         <div class="section-head"><div><span class="kicker">Apoio opcional</span><h2>Vídeos sem você precisar gravar</h2></div><p>O curso funciona sem vídeos, mas uma playlist externa pode complementar instalações e demonstrações. O conteúdo principal continua dentro do site para evitar aprendizado passivo.</p></div>
         <div class="resource-grid">
           <article class="card panel">
-            <div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6" title="Curso de Python 3 - Mundo 1: Fundamentos, Curso em Vídeo" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-            <p class="muted" style="font-size:.78rem;line-height:1.55;margin-bottom:0">Playlist externa do Curso em Vídeo, incorporada como material complementar. A disponibilidade depende do YouTube e de conexão com a internet.</p>
+            <div class="video-shell">
+              <div class="video-cover" id="youtubeCover">
+                <div class="video-cover-inner">
+                  <div class="youtube-mark" aria-hidden="true"></div>
+                  <span class="kicker">Curso em Vídeo · material complementar</span>
+                  <h3>Python 3 — Mundo 1: Fundamentos</h3>
+                  <p>O player só é carregado quando você pedir. Isso reduz bloqueios de privacidade e evita que a prévia tente abrir o YouTube automaticamente.</p>
+                  <div class="video-actions">
+                    <button class="btn btn-primary" id="loadYoutubePlayer" type="button">▶ Carregar vídeo aqui</button>
+                    <a class="btn btn-secondary" href="https://www.youtube.com/playlist?list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6" target="_blank" rel="noopener noreferrer">Abrir no YouTube ↗</a>
+                  </div>
+                </div>
+              </div>
+              <div class="video-wrap" id="youtubePlayerWrap" hidden aria-live="polite"></div>
+              <div class="video-help"><strong>O player não abriu?</strong> Algumas prévias e extensões bloqueiam vídeos incorporados. Use <a href="https://www.youtube.com/playlist?list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6" target="_blank" rel="noopener noreferrer">Abrir no YouTube</a> ou acesse o <a href="https://www.cursoemvideo.com/curso/python-3-mundo-1/" target="_blank" rel="noopener noreferrer">curso oficial</a>.</div>
+            </div>
           </article>
           <article class="card panel">
             <div class="panel-title"><div><span class="kicker">Ordem correta</span><h2>Como usar vídeos</h2></div></div>
@@ -1068,6 +1095,27 @@ document.getElementById('runCode').addEventListener('click',runPython);
 document.getElementById('clearConsole').addEventListener('click',()=>{document.getElementById('consoleOutput').textContent='Terminal limpo.\n';document.getElementById('runStatus').textContent='';});
 document.getElementById('loadExample').addEventListener('click',()=>{const next=getNextLesson().module;document.getElementById('codeEditor').value=next.code;showToast(`Exemplo: ${next.title}`);});
 document.getElementById('explainError').addEventListener('click',()=>{document.getElementById('consoleOutput').textContent='COMO LER UM ERRO\n\n1. Leia a última linha: tipo e mensagem.\n2. Procure a primeira linha que aponta para seu arquivo.\n3. Confira os valores e tipos imediatamente antes da falha.\n4. Mude uma hipótese pequena e execute novamente.\n\nErro não é fracasso: é informação sobre o estado do programa.\n';});
+
+const loadYoutubeButton=document.getElementById('loadYoutubePlayer');
+if(loadYoutubeButton){
+  loadYoutubeButton.addEventListener('click',()=>{
+    const cover=document.getElementById('youtubeCover');
+    const wrap=document.getElementById('youtubePlayerWrap');
+    if(!wrap.querySelector('iframe')){
+      const iframe=document.createElement('iframe');
+      iframe.src='https://www.youtube.com/embed?listType=playlist&list=PLHz_AreHm4dlKP6QQCekuIPky1CiwmdI6&hl=pt-BR&rel=0';
+      iframe.title='Curso de Python 3 — Mundo 1: Fundamentos, Curso em Vídeo';
+      iframe.loading='eager';
+      iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy='strict-origin-when-cross-origin';
+      iframe.allowFullscreen=true;
+      wrap.appendChild(iframe);
+    }
+    cover.hidden=true;
+    wrap.hidden=false;
+    showToast('Player carregado. Se houver bloqueio, abra no YouTube.');
+  });
+}
 
 document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{const text=btn.previousElementSibling.textContent;try{await navigator.clipboard.writeText(text);showToast('Prompt copiado');}catch{showToast('Selecione e copie o texto');}}));
 document.getElementById('resetProgress').addEventListener('click',()=>{if(!confirm('Reiniciar todo o progresso do Mateus?'))return;try { localStorage.removeItem(STORAGE_KEY); } catch {} state={completedLessons:{},lastModule:'m01',lastLesson:0,streak:0,lastStudyDate:null};updateProgressUI();showToast('Progresso reiniciado');});
