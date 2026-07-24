@@ -56,7 +56,7 @@ O projeto é **100% estático** — funciona apenas abrindo o arquivo `index.htm
 
 Este projeto está disponível em:
 - **GitHub:** [mateusoliveiradev1/python](https://github.com/mateusoliveiradev1/python)
-- **Vercel:** [URL do deploy]
+- **Vercel:** [trilha-python.vercel.app](https://trilha-python.vercel.app)
 
 ---
 
