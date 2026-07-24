@@ -1,0 +1,22 @@
+# Pyodide cache downloaded in browser
+.pyodide/
+pyodide/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor temp files
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Local env
+.env
+.env.local
